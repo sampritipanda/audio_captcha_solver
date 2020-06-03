@@ -2,7 +2,13 @@
 
 import os
 import sys
-from captcha.captcha.audio import AudioCaptcha
+
+if 'pypy' in sys.executable:
+    sys.path.append("./captcha")
+    from captcha.audio import AudioCaptcha
+else:
+    from captcha.captcha.audio import AudioCaptcha
+
 import random
 import secrets
 
