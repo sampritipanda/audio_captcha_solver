@@ -1,0 +1,45 @@
+Components:
+TRAIN
+_______________________________________________________________________________________________________
+1. Collecting the data (class/function):
+    1.1. Input: A list of wav files/manual transcription
+    1.2. Output: voice segments/label - each voices segments are an array of intensitiy (1-D np array)
+    
+2. Feature extraction (class)
+    1.1. Components:
+        _ Base Algo: MFCC, RASTA-LPL
+        _ Extra stuffs:
+            _ PCA?
+            _ normalized?
+    1.2. Call
+        _ Input: voice segments/label
+        _ Output: a list of features/label
+        
+3. ModelGenerator (class)
+    1.1. Components:
+        _ Base Algo: KNN, SVM
+        _ Parameters for base algo
+    1.2. GetModel:
+        _ Input: data
+        _ Output: Model
+
+4. Train (class)
+    1. Components:
+        _ Feature extraction
+        _ ModelGenerator
+        _ Extra stuffs: 
+            +) cross-validation, validation-set?
+    2. Function Train():
+        return the model
+_____________________________________________________________________________________________________________
+TEST (we have the model/feature exaction from train):
+For each test input:
+    1. Segmenatation:
+        1.1. Input a wav files
+        1.2. Output: voice segments/potential starting points for digits
+    2. For each potential location:
+        1.1. Feature exaction
+        1.2. Run throught the model
+        1.3. Append digit/letter to result
+    3. Validation and collect metric
+
