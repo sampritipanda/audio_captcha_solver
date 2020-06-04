@@ -1016,6 +1016,8 @@ class Securimage
      */
     protected $gdsignaturecolor;
 
+    public $audio_offets;
+
     /**
      * Create a new securimage object, pass options to set in the constructor.
      *
@@ -3155,6 +3157,8 @@ class Securimage
         $wavCaptcha = new WavFile();
         $first      = true;     // reading first wav file
 
+        $this->audio_offsets = [];
+
         if ($this->audio_use_sox && !is_executable($this->sox_binary_path)) {
             throw new Exception("Path to SoX binary is incorrect or not executable");
         }
@@ -3188,6 +3192,8 @@ class Securimage
                     $first = false;
                 }
 
+                $bytesPerSample = $wavCaptcha->getBitsPerSample()/8;
+                array_push($this->audio_offsets, intval(($wavCaptcha->getDataSize() + $l->getDataSize()/2)/$bytesPerSample));
                 // append letter to the captcha audio
                 $wavCaptcha->appendWav($l);
 

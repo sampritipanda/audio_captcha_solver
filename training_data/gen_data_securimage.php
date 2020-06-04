@@ -31,8 +31,11 @@ for($i = 1; $i <= $iters; $i++) {
   $img->createCode();
   $audio = $r->invoke($img);
   $code = $img->getCode(true)['display'];
-  $file = $code . '_' . bin2hex(random_bytes(4)) . '.wav';
-  $path = $argv[1] . '/' . $file;
-  echo $file . "\n";
-  file_put_contents($path, $audio);
+  $id = bin2hex(random_bytes(4));
+  $offsets = json_encode($img->audio_offsets);
+  $data = array("code"=>$code, "offsets"=>$offsets);
+  $path = $argv[1] . '/' . $id;
+  echo $code . ": " . $id . "\n";
+  file_put_contents($path . ".wav", $audio);
+  file_put_contents($path . ".txt", json_encode($data));
 }
