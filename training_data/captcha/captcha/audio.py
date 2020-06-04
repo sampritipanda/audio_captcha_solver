@@ -70,7 +70,7 @@ def patch_wave_header(body):
     header = copy.copy(WAVE_HEADER)
     # fill the total length position
     header[4:8] = bytearray(struct.pack('<I', total))
-    header += bytearray(struct.pack('<I', length))
+    header += bytearray(struct.pack('<I', padded))
 
     data = header + body
 
