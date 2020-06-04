@@ -1,6 +1,0 @@
-[submodule "training_data/captcha"]
-	path = training_data/captcha
-	url = https://github.com/lepture/captcha
-[submodule "training_data/securimage"]
-	path = training_data/securimage
-	url = https://github.com/dapphp/securimage
