@@ -10,15 +10,22 @@ import matplotlib.pyplot as plt
 #dir: directory to gather data
 #left, right: how far the segment extend to left/right from center point
 #visualization=True: => special mode: visualization
+#maxFiles=int or None => maxFiles is the maximum number of files we need to collect the data
 #Return:
 #X -> data: np.2D array
 #y -> label: np.1D array
-def collectTrainData(dir, left, right, visualization=False):
+#rate -> rate of the wav file: int
+def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
     prefixes = list(set([x.split('.')[0] for x in os.listdir(dir)])) #list all files names
-    plt.close()
-    fig, axes = plt.subplots(len(prefixes) , 1 , figsize =(6 , 10), subplot_kw={'xticks': (), 'yticks': ()})
-    X, y = [], []
-    for i,prefix,ax in zip(range(len(prefixes)), prefixes, axes.ravel()):
+    plt.close() #init plit
+    #setup
+    X, y, sampleRate = [], [], 0    #return value
+    numFiles = len(prefixes)
+    if maxFiles is not None:
+        numFiles = min(numFiles, maxFiles)
+    fig, axes = plt.subplots(max(numFiles, 2) , 1 , figsize =(6 , 10), subplot_kw={'xticks': (), 'yticks': ()})
+    #iterate through all audio/description files
+    for i,prefix,ax in zip(range(numFiles), prefixes, axes.ravel()):
         wavFile = os.path.join(dir, prefix + ".wav")    
         outFile = os.path.join(dir, prefix + ".txt")
         #read/parse .wav file and .txt file
@@ -29,29 +36,33 @@ def collectTrainData(dir, left, right, visualization=False):
         labels = map(int, list(output["code"]))
         #calculate the length of the audio
         seconds = len(data)/rate
-        ax.plot(np.array([seconds*i/len(data) for i in range(len(data))]), data) #visualization
+        #calculate rate
+        sampleRate = rate
+        if visualization:
+            ax.plot(np.array([seconds*i/len(data) for i in range(len(data))]), data) #visualization
         for i,j in zip(startPoints, labels):
             #get start/end point of each segment
             sta = i - left + 1
             fin = i + right - 1
             #plot
-            ax.axvline(seconds/len(data)*sta, color='red')
-            ax.axvline(seconds/len(data)*fin, color='red')
+            if visualization:
+                ax.axvline(seconds/len(data)*sta, color='red')
+                ax.axvline(seconds/len(data)*fin, color='red')
             #append to the data collection
             X.append(data[sta:fin])
             y.append(j)
     if visualization:
         plt.show()
     
-    return np.array(X), np.array(y)
+    return np.array(X), np.array(y), sampleRate
     
 if __name__ == "__main__":
     DIR = os.path.join("training_data", "output_securimage")
     LEFT = 2500
     RIGHT = 2500
-    X,y = collectTrainData(DIR, LEFT, RIGHT, False)
+    X,y,rate = collectTrainData(DIR, LEFT, RIGHT, False, 10)
     print("===================X:")
     print(X)
     print("====================y:")
     print(y)
-    collectTrainData(DIR, LEFT, RIGHT, True)
+    collectTrainData(DIR, LEFT, RIGHT, True, 10)
