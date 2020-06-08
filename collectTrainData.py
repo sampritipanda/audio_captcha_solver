@@ -25,41 +25,49 @@ def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
         numFiles = min(numFiles, maxFiles)
     fig, axes = plt.subplots(max(numFiles, 2) , 1 , figsize =(6 , 10), subplot_kw={'xticks': (), 'yticks': ()})
     #iterate through all audio/description files
-    for i,prefix,ax in zip(range(numFiles), prefixes, axes.ravel()):
+    for i,ax in zip(range(numFiles), axes.ravel()):
+        prefix = prefixes[i]
         wavFile = os.path.join(dir, prefix + ".wav")    
         outFile = os.path.join(dir, prefix + ".txt")
         #read/parse .wav file and .txt file
         rate, data = scipy.io.wavfile.read(wavFile)
         output = json.load(open(outFile))
         #collect the necessary information from the .txt file
-        startPoints = map(int, output["offsets"][1:-1].split(','))
-        labels = map(int, list(output["code"]))
+        spokenLocations = map(int, output["offsets"][1:-1].split(','))
+        #colect the label of each position
+        labels = []
+        for x in list(output["code"]):
+            if x.isdigit():
+                labels.append(int(x))
+            else:
+                labels.append(10 + ord(x) - ord('a'))
         #calculate the length of the audio
         seconds = len(data)/rate
         #calculate rate
         sampleRate = rate
         if visualization:
             ax.plot(np.array([seconds*i/len(data) for i in range(len(data))]), data) #visualization
-        for i,j in zip(startPoints, labels):
+        ax.set_xlim(0, 10)  #!!!!!!!!!!
+        for location,label in zip(spokenLocations, labels):
             #get start/end point of each segment
-            sta = i - left + 1
-            fin = i + right - 1
+            sta = location - left
+            fin = location + right
             #plot
             if visualization:
                 ax.axvline(seconds/len(data)*sta, color='red')
                 ax.axvline(seconds/len(data)*fin, color='red')
             #append to the data collection
             X.append(data[sta:fin])
-            y.append(j)
+            y.append(label)
     if visualization:
         plt.show()
     
     return np.array(X), np.array(y), sampleRate
     
 if __name__ == "__main__":
-    DIR = os.path.join("training_data", "output_securimage")
-    LEFT = 2500
-    RIGHT = 2500
+    DIR = os.path.join("data", "securimage_all", "train")
+    LEFT = 2000
+    RIGHT = 2000
     X,y,rate = collectTrainData(DIR, LEFT, RIGHT, False, 10)
     print("===================X:")
     print(X)
