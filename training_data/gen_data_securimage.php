@@ -9,7 +9,7 @@ require_once dirname(__FILE__) . '/securimage/WavFile.php';
 
 $img = new Securimage();
 
-$img->charset = "0123456789";
+$img->charset = "0123456789abcdefghijklmnopqrstuvwxyz";
 $img->code_length = intval($argv[2]);
 
 // Other audio settings
