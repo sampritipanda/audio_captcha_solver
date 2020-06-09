@@ -5,27 +5,23 @@ import os
 import numpy as np
 import scipy.io.wavfile
 import matplotlib.pyplot as plt
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
-from python_speech_features import mfcc
 
 from collectTrainData import collectTrainData
 from getPotentialSpeakLocation import getPotentialSpeakLocation
-
-def featureExtraction(X, rate):
-    X_data = []
-    for signal in X:
-        features = mfcc(signal,rate).flatten()
-        X_data.append(features)
-    return np.array(X_data)
+from FeatureExtraction import Mfcc,Raw
+from MLAlgo import KNN
 
 #Paramters
-DIR_TRAIN = os.path.join("data", "securimage_all", "train")
-DIR_TEST = os.path.join("data", "securimage_all", "test")
+DIR_TRAIN = os.path.join("data", "securimage_digits", "train")
+DIR_TEST = os.path.join("data", "securimage_digits", "test")
 LEFT = 2500
 RIGHT = 2500
 print("Train_data location = " + DIR_TRAIN)
 print("Test_data location = " + DIR_TEST)
+
+#Components
+featureExtraction = Mfcc()
+mlModel = KNN(n_neighbors=7)
 
 #1.collect the raw train data
 X_train,y_train,rate = collectTrainData(DIR_TRAIN, LEFT, RIGHT, False)
@@ -33,9 +29,8 @@ X_train,y_train,rate = collectTrainData(DIR_TRAIN, LEFT, RIGHT, False)
 #2. feature extraction
 X_train = featureExtraction(X_train, rate) 
 
-#3. build the model
-knn = KNeighborsClassifier(n_neighbors=7) #KNN algorithm
-knn.fit(X_train, y_train)
+#3. train the model
+mlModel.train(X_train, y_train)
 
 #4. try to solve each output
 #Iterate through all outputs
@@ -68,7 +63,7 @@ for i in range(len(prefixes)):
         signal = data[sta:fin]
         #feature exaction
         signal = featureExtraction([signal], rate)[0]
-        predicted = knn.predict(np.array([signal]))
+        predicted = mlModel.predict(np.array([signal]))
         if predicted[0] < 10:
             captchas += str(predicted[0])
         else:
