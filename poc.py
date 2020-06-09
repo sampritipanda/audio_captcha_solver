@@ -40,6 +40,7 @@ count = 0
 for i in range(len(prefixes)):
 # for i in range(10):
     prefix = prefixes[i]
+    print(prefix)
     #4.1. Read the file
     wavFile = os.path.join(DIR_TEST, prefix + ".wav")    
     outFile = os.path.join(DIR_TEST, prefix + ".txt")

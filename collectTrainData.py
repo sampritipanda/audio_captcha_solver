@@ -5,6 +5,10 @@ import numpy as np
 import scipy.io.wavfile
 from scipy.fftpack import dct
 import matplotlib.pyplot as plt
+import random
+
+DISTORT_COUNT = 10
+DISTORT_OFFSET = 200
 
 #Parameters:
 #dir: directory to gather data
@@ -52,16 +56,20 @@ def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
             ax.plot(np.array([seconds*i/len(data) for i in range(len(data))]), data) #visualization
         ax.set_xlim(0, 10)  #!!!!!!!!!!
         for location,label in zip(spokenLocations, labels):
-            #get start/end point of each segment
-            sta = location - left
-            fin = location + right
-            #plot
-            if visualization:
-                ax.axvline(seconds/len(data)*sta, color='red')
-                ax.axvline(seconds/len(data)*fin, color='red')
-            #append to the data collection
-            X.append(data[sta:fin])
-            y.append(label)
+            for r in range(DISTORT_COUNT):
+                random_offset = random.randrange(-DISTORT_OFFSET, DISTORT_OFFSET)
+                if r == 0:
+                    random_offset = 0
+                #get start/end point of each segment
+                sta = location - left + random_offset
+                fin = location + right + random_offset
+                #plot
+                if visualization:
+                    ax.axvline(seconds/len(data)*sta, color='red')
+                    ax.axvline(seconds/len(data)*fin, color='red')
+                #append to the data collection
+                X.append(data[sta:fin])
+                y.append(label)
     if visualization:
         plt.show()
     
