@@ -24,7 +24,6 @@ DIR_TRAIN = os.path.join("data", "securimage_digits", "train")
 DIR_TEST = os.path.join("data", "securimage_digits", "test")
 LEFT = 2500
 RIGHT = 2500
-OFF = 2500
 print("Train_data location = " + DIR_TRAIN)
 print("Test_data location = " + DIR_TEST)
 
@@ -41,8 +40,12 @@ knn.fit(X_train, y_train)
 #4. try to solve each output
 #Iterate through all outputs
 prefixes = list(set([x.split('.')[0] for x in os.listdir(DIR_TEST)])) #list all files names
-for i in range(10):
+prefixes = sorted(prefixes)
+count = 0
+for i in range(len(prefixes)):
+# for i in range(10):
     prefix = prefixes[i]
+    print(prefix)
     #4.1. Read the file
     wavFile = os.path.join(DIR_TEST, prefix + ".wav")    
     outFile = os.path.join(DIR_TEST, prefix + ".txt")
@@ -50,7 +53,7 @@ for i in range(10):
     rate, data = scipy.io.wavfile.read(wavFile)
     output = json.load(open(outFile))
     #4.2. Get potential spoken locs
-    locs = getPotentialSpeakLocation(data, rate, LEFT, RIGHT, 4, False, OFF)
+    locs = getPotentialSpeakLocation(data, rate, LEFT + RIGHT, 4)
     #4.3. Build the answer
     captchas = ""
     #Iterate through each loc
@@ -60,12 +63,13 @@ for i in range(10):
     for loc in locs:
         sta = loc - LEFT
         fin = loc + RIGHT
-        signal = data[sta:fin + 1]
+        signal = data[sta:fin]
         #feature exaction
         signal = featureExtraction([signal], rate)[0]
         predicted = knn.predict(np.array([signal]))
         captchas += str(predicted[0])
+    if captchas == output["code"]:
+        count += 1
     print("Actual output = %s | Expected output = %s"%(captchas, output["code"]))
 
-    
-    
+print(count/len(prefixes))
