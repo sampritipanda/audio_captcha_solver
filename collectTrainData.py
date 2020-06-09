@@ -68,7 +68,7 @@ def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
                     ax.axvline(seconds/len(data)*sta, color='red')
                     ax.axvline(seconds/len(data)*fin, color='red')
                 #append to the data collection
-                X.append(data[sta:fin])
+                X.append(data[sta:fin + 1])
                 y.append(label)
     if visualization:
         plt.show()
