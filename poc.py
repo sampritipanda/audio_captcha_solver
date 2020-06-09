@@ -20,8 +20,8 @@ def featureExtraction(X, rate):
     return np.array(X_data)
 
 #Paramters
-DIR_TRAIN = os.path.join("data", "securimage_digits", "train")
-DIR_TEST = os.path.join("data", "securimage_digits", "test")
+DIR_TRAIN = os.path.join("data", "securimage_all", "train")
+DIR_TEST = os.path.join("data", "securimage_all", "test")
 LEFT = 2500
 RIGHT = 2500
 print("Train_data location = " + DIR_TRAIN)
@@ -45,7 +45,6 @@ count = 0
 for i in range(len(prefixes)):
 # for i in range(10):
     prefix = prefixes[i]
-    print(prefix)
     #4.1. Read the file
     wavFile = os.path.join(DIR_TEST, prefix + ".wav")    
     outFile = os.path.join(DIR_TEST, prefix + ".txt")
@@ -70,7 +69,10 @@ for i in range(len(prefixes)):
         #feature exaction
         signal = featureExtraction([signal], rate)[0]
         predicted = knn.predict(np.array([signal]))
-        captchas += str(predicted[0])
+        if predicted[0] < 10:
+            captchas += str(predicted[0])
+        else:
+            captchas += chr(predicted[0] - 10 + ord('a'))
     if captchas == output["code"]:
         count += 1
     print("Actual output = %s | Expected output = %s"%(captchas, output["code"]))
