@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 #y -> label: np.1D array
 #rate -> rate of the wav file: int
 def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
+    size = left + right
     prefixes = list(set([x.split('.')[0] for x in os.listdir(dir)])) #list all files names
     plt.close() #init plit
     #setup
@@ -31,9 +32,11 @@ def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
         outFile = os.path.join(dir, prefix + ".txt")
         #read/parse .wav file and .txt file
         rate, data = scipy.io.wavfile.read(wavFile)
+        data = np.asarray([0] * left + list(data) + [0] * right)
         output = json.load(open(outFile))
         #collect the necessary information from the .txt file
         spokenLocations = map(int, output["offsets"][1:-1].split(','))
+        spokenLocations = [(x + left) for x in spokenLocations]
         #colect the label of each position
         labels = []
         for x in list(output["code"]):

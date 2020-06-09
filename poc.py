@@ -51,12 +51,15 @@ for i in range(len(prefixes)):
     outFile = os.path.join(DIR_TEST, prefix + ".txt")
     #read/parse .wav file and .txt file
     rate, data = scipy.io.wavfile.read(wavFile)
+    data = np.asarray([0] * LEFT + list(data) + [0] * RIGHT)
     output = json.load(open(outFile))
     #4.2. Get potential spoken locs
-    locs = getPotentialSpeakLocation(data, rate, LEFT + RIGHT, 4)
+    locs = getPotentialSpeakLocation(data, rate, LEFT, RIGHT, 4)
     #4.3. Build the answer
     captchas = ""
     #Iterate through each loc
+    expectedLocs = map(int, output["offsets"][1:-1].split(','))
+    expectedLocs = [(x + LEFT) for x in expectedLocs]
     print("===================================")
     print("Actual locs = " + str(locs))
     print("Expected locs = " + output["offsets"])

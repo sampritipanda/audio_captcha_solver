@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def getPotentialSpeakLocation(data, rate, size, num_letters):
-    data = np.asarray(([0] * size) + list(data) + ([0] * size))
-    sample_width = 50
+def getPotentialSpeakLocation(data, rate, left, right, num_letters):
+    size = left + right
+    sample_width = 10
     x = []
-    for i in range(size, len(data) - size, sample_width):
+    for i in range(left, len(data) - size, sample_width):
         x.append((np.mean(np.abs(data[i:i+size])), i))
     # plt.close()
     # seconds = len(data)/rate
@@ -28,5 +28,4 @@ def getPotentialSpeakLocation(data, rate, size, num_letters):
             locs.append(cur_loc)
         i += 1
     locs = sorted(locs)
-    locs = [(loc - size) for loc in locs]
     return locs
