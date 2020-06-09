@@ -56,7 +56,7 @@ for i in range(len(prefixes)):
     expectedLocs = [(x + LEFT) for x in expectedLocs]
     print("===================================")
     print("Actual locs = " + str(locs))
-    print("Expected locs = " + output["offsets"])
+    print("Expected locs = " + str(expectedLocs))
     for loc in locs:
         sta = loc - LEFT
         fin = loc + RIGHT
