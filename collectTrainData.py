@@ -19,8 +19,7 @@ DISTORT_OFFSET = 200
 #X -> data: np.2D array
 #y -> label: np.1D array
 #rate -> rate of the wav file: int
-def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
-    size = left + right
+def collectTrainData(dir, left, right, maxFiles=None, visualization=False):
     prefixes = list(set([x.split('.')[0] for x in os.listdir(dir)])) #list all files names
     plt.close() #init plit
     #setup
@@ -36,26 +35,29 @@ def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
         outFile = os.path.join(dir, prefix + ".txt")
         #read/parse .wav file and .txt file
         rate, data = scipy.io.wavfile.read(wavFile)
-        data = np.asarray([0] * left + list(data) + [0] * right)
         output = json.load(open(outFile))
-        #collect the necessary information from the .txt file
+        #pad zero to the begin and end of the array to prevent out of bound
+        data = np.asarray([0] * left + list(data) + [0] * right)
+        #collect the spoken location data
         spokenLocations = map(int, output["offsets"][1:-1].split(','))
         spokenLocations = [(x + left) for x in spokenLocations]
         #colect the label of each position
         labels = []
         for x in list(output["code"]):
-            if x.isdigit():
-                labels.append(int(x))
-            else:
-                labels.append(10 + ord(x) - ord('a'))
+            labels.append(int(x) if x.isdigit() else 10 + ord(x) - ord('a'))
         #calculate the length of the audio
         seconds = len(data)/rate
         #calculate rate
         sampleRate = rate
+        #===============visualization
         if visualization:
-            ax.plot(np.array([seconds*i/len(data) for i in range(len(data))]), data) #visualization
-        ax.set_xlim(0, 10)  #!!!!!!!!!!
+            ax.plot(np.array([seconds*i/len(data) for i in range(len(data))]), data) 
+            ax.set_xlim(0, 10)  
         for location,label in zip(spokenLocations, labels):
+            #distort the train data 
+            #Why?
+            #1. More train data
+            #2. Prevent overfiting
             for r in range(DISTORT_COUNT):
                 random_offset = random.randrange(-DISTORT_OFFSET, DISTORT_OFFSET)
                 if r == 0:
@@ -63,12 +65,12 @@ def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
                 #get start/end point of each segment
                 sta = location - left + random_offset
                 fin = location + right + random_offset
-                #plot
-                if visualization:
+                #===============visualization
+                if r == 0 and visualization:
                     ax.axvline(seconds/len(data)*sta, color='red')
                     ax.axvline(seconds/len(data)*fin, color='red')
                 #append to the data collection
-                X.append(data[sta:fin + 1])
+                X.append(data[sta:fin])
                 y.append(label)
     if visualization:
         plt.show()
@@ -77,11 +79,11 @@ def collectTrainData(dir, left, right, visualization=False, maxFiles=None):
     
 if __name__ == "__main__":
     DIR = os.path.join("data", "securimage_all", "train")
-    LEFT = 2000
-    RIGHT = 2000
-    X,y,rate = collectTrainData(DIR, LEFT, RIGHT, False, 10)
+    LEFT = 2500
+    RIGHT = 2500
+    X,y,rate = collectTrainData(DIR, LEFT, RIGHT, 10, False)
     print("===================X:")
     print(X)
     print("====================y:")
     print(y)
-    collectTrainData(DIR, LEFT, RIGHT, True, 10)
+    collectTrainData(DIR, LEFT, RIGHT, 10, True)
