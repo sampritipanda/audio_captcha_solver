@@ -6,6 +6,7 @@ import numpy as np
 import scipy.io.wavfile
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
 
 from collectTrainData import collectTrainData
 from getPotentialSpeakLocation import getPotentialSpeakLocation
@@ -13,20 +14,22 @@ from FeatureExtraction import Rasta,Mfcc,Raw
 from MLAlgo import KNN, SVM, NeuralNetFeatures, NeuralNetRaw
 
 
-def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, pcaDim=None):
+def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, applyPca):
     #1.collect the raw train data
     print("Collect raw train data from %s..."%(dir_train))
     X_train,y_train,rate = collectTrainData(dir_train, left, right)
 
     #2. feature extraction
     print("Apply feature extraction to the raw data...")
-    X_train = featureExtraction(X_train, rate) 
+    X_train = featureExtraction(X_train, rate)
 
-    pca = PCA(n_components=pcaDim)
+    pca = PCA(n_components = 0.95)
+    scaler = MinMaxScaler()
 
     #******PCA (optional)
-    if pcaDim is not None:
-        print("Apply PCA to reduce the dimensionality of the data to %d..."%pcaDim)
+    if applyPca:
+        print("Apply PCA to reduce the dimensionality of the data to 95%...")
+        # X_train = scaler.fit_transform(X_train)
         pca.fit(X_train)
         X_train = pca.transform(X_train)
 
@@ -39,10 +42,12 @@ def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, pc
     prefixes = list(set([x.split('.')[0] for x in os.listdir(DIR_TEST)])) #list all files names
     prefixes = sorted(prefixes)
     count = 0
+    count_34th = 0
+    indiv_count = 0
     for i in range(len(prefixes)):
         prefix = prefixes[i]
         #4.1. Read the file
-        wavFile = os.path.join(DIR_TEST, prefix + ".wav")    
+        wavFile = os.path.join(DIR_TEST, prefix + ".wav")
         outFile = os.path.join(DIR_TEST, prefix + ".txt")
         #read/parse .wav file and .txt file
         rate, data = scipy.io.wavfile.read(wavFile)
@@ -68,7 +73,8 @@ def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, pc
         #feature extraction
         signals = featureExtraction(signals, rate)
         #******PCA (optional)
-        if pcaDim is not None:
+        if applyPca:
+            # signals = scaler.fit_transform(signals)
             signals = pca.transform(signals)
         #predict the output for each individual token
         predictedVals = mlModel.predict(signals)
@@ -76,20 +82,25 @@ def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, pc
             captchas += str(c) if c < 10 else chr(ord('a') + c - 10)
         if captchas == output["code"]:
             count += 1
+        cur_cnt = 0
+        for i in range(4):
+            if captchas[i] == output["code"][i]:
+                cur_cnt += 1
+                indiv_count += 1
+        if cur_cnt == 3:
+            count_34th += 1
         print("Actual output = %s | Expected output = %s"%(captchas, output["code"]))
-    
+
     print("Accuracy = %.4f"%(count/len(prefixes)))
-    
+    print("3/4th Accuracy = %.4f"%((count + count_34th)/len(prefixes)))
+    print("Accuracy of Individual Digits = %.4f"%((indiv_count)/(len(prefixes) * 4)))
+
 #########CONFIGURATION FOR THE PIPELINE
 if __name__ == '__main__':
-    DIR_TRAIN = os.path.join("data", "securimage_all", "train")
-    DIR_TEST = os.path.join("data", "securimage_all", "test")
+    DIR_TRAIN = os.path.join("data", "securimage_digits", "train")
+    DIR_TEST = os.path.join("data", "securimage_digits", "test")
     LEFT = 2500
     RIGHT = 2500
-    # MLMODEL = NeuralNetFeatures(10)
-    MLMODEL = NeuralNetRaw(36)
-    # MLMODEL = SVM()
-    # FEATURE_EXTRATION = Rasta()
-    FEATURE_EXTRATION = Mfcc(flatten=False)
-    # FEATURE_EXTRATION = Raw()
-    runPipeline(DIR_TRAIN, DIR_TEST, LEFT, RIGHT, MLMODEL, FEATURE_EXTRATION)
+    MLMODEL = SVM()
+    FEATURE_EXTRATION = Mfcc(flatten=True)
+    runPipeline(DIR_TRAIN, DIR_TEST, LEFT, RIGHT, MLMODEL, FEATURE_EXTRATION, applyPca=True)
