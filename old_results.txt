@@ -37,4 +37,17 @@ Accuracy = 0.4780
 3/4th Accuracy = 0.8360
 Accuracy of Individual Digits = 0.8215
 
+SVM - Raw - 5 distorts - Digits
+Accuracy = 0.2000
+3/4th Accuracy = 0.5380
+Accuracy of Individual Digits = 0.6460
 
+SVM - Raw - 5 distorts - Digits Distorted
+Accuracy = 0.1680
+3/4th Accuracy = 0.5180
+Accuracy of Individual Digits = 0.6295
+
+SVM - Raw - 5 distorts - Digits + Letters
+Accuracy = 0.1620
+3/4th Accuracy = 0.5060
+Accuracy of Individual Digits = 0.6210
