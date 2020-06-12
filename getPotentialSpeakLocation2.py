@@ -3,10 +3,13 @@ import matplotlib.pyplot as plt
 
 def getPotentialSpeakLocation(data, rate, left, right, num_letters):
     size = left + right
-    sample_width = 10
     x = []
-    for i in range(left, len(data) - size, sample_width):
-        x.append((np.mean(np.abs(data[i:i+size])), i))
+    cur_sum = np.sum(np.abs(data[left:left+size]))
+    for i in range(left, len(data) - size):
+        mean = cur_sum/size
+        x.append((mean, i))
+        cur_sum -= np.abs(data[i])
+        cur_sum += np.abs(data[i+size])
     # plt.close()
     # seconds = len(data)/rate
     # fig, axes = plt.subplots(2 , 1 , figsize =(6 , 10), subplot_kw={'xticks': (), 'yticks': ()})
