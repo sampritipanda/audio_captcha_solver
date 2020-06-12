@@ -50,4 +50,18 @@ Accuracy = 0.1620
 3/4th Accuracy = 0.5060
 Accuracy of Individual Digits = 0.6210
 
-K-Nearest Neighbors (KNN)
+
+KNN + MFCC + 25 distorts - Digits:
+Accuracy = 0.6800
+3/4th Accuracy = 0.9440
+Accuracy of Individual Digits = 0.9010
+
+KNN + MFCC + 25 distorts - Digits distored:
+Accuracy = 0.5160
+3/4th Accuracy = 0.8880
+Accuracy of Individual Digits = 0.8440
+
+KNN + MFCC + 25 distorts - Digits + letter:
+Accuracy = 0.5400
+3/4th Accuracy = 0.8720
+Accuracy of Individual Digits = 0.8445
