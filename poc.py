@@ -97,8 +97,8 @@ def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, ap
 
 #########CONFIGURATION FOR THE PIPELINE
 if __name__ == '__main__':
-    DIR_TRAIN = os.path.join("data", "securimage_digits", "train")
-    DIR_TEST = os.path.join("data", "securimage_digits", "test")
+    DIR_TRAIN = os.path.join("data", "securimage_all", "train")
+    DIR_TEST = os.path.join("data", "securimage_all", "test")
     LEFT = 2500
     RIGHT = 2500
     MLMODEL = SVM()

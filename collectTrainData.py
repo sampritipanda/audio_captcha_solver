@@ -7,6 +7,8 @@ from scipy.fftpack import dct
 import matplotlib.pyplot as plt
 import random
 
+from getPotentialSpeakLocation import getPotentialSpeakLocation
+
 DISTORT_COUNT = 25
 DISTORT_OFFSET = 300
 
@@ -41,6 +43,11 @@ def collectTrainData(dir, left, right, maxFiles=None, visualization=False):
         #collect the spoken location data
         spokenLocations = map(int, output["offsets"][1:-1].split(','))
         spokenLocations = [(x + left) for x in spokenLocations]
+        expectedLocs = getPotentialSpeakLocation(data, rate, left, right, 4)
+        for i in range(len(spokenLocations)):
+            if abs(spokenLocations[i] - expectedLocs[i]) < min(left, right):
+                spokenLocations[i] = expectedLocs[i]
+
         #colect the label of each position
         labels = []
         for x in list(output["code"]):
