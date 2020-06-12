@@ -1,0 +1,40 @@
+SVM - MFCC - Digits - 50 distorts
+
+Accuracy = 0.7360
+3/4th Accuracy = 0.9540
+Accuracy of Individual Digits = 0.9175
+
+SVM - MFCC - Distorted Digits - 50 distorts
+
+Accuracy = 0.5280
+3/4th Accuracy = 0.8900
+Accuracy of Individual Digits = 0.8485
+
+SVM - MFCC - Digits + Letters - 50 distorts
+
+Accuracy = 0.5920
+3/4th Accuracy = 0.8840
+Accuracy of Individual Digits = 0.8630
+
+
+
+
+SVM - Rasta - Digits - 50 distorts
+
+Accuracy = 0.4560
+3/4th Accuracy = 0.8240
+Accuracy of Individual Digits = 0.8105
+
+SVM - Rasta - Distorted Digits - 50 distorts
+
+Accuracy = 0.4580
+3/4th Accuracy = 0.8400
+Accuracy of Individual Digits = 0.8140
+
+SVM - Rasta - Digits + Letters - 50 distorts
+
+Accuracy = 0.4780
+3/4th Accuracy = 0.8360
+Accuracy of Individual Digits = 0.8215
+
+
