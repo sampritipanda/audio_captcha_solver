@@ -1,0 +1,79 @@
+SVM - MFCC - Digits - 25 distorts
+
+Accuracy = 0.9800
+3/4th Accuracy = 0.9800
+Accuracy of Individual Digits = 0.9860
+
+SVM - MFCC - Distorted Digits - 25 distorts
+
+Accuracy = 0.9760
+3/4th Accuracy = 0.9760
+Accuracy of Individual Digits = 0.9835
+
+SVM - MFCC - Digits + Letters - 25 distorts
+
+Accuracy = 0.9400
+3/4th Accuracy = 0.9760
+Accuracy of Individual Digits = 0.9765
+
+
+
+SVM - Rasta - Digits - 25 distorts
+
+Accuracy = 0.9780
+3/4th Accuracy = 0.9800
+Accuracy of Individual Digits = 0.9855
+
+SVM - Rasta - Distorted Digits - 25 distorts
+
+Accuracy = 0.9720
+3/4th Accuracy = 0.9760
+Accuracy of Individual Digits = 0.9825
+
+SVM - Rasta - Digits + Letters - 25 distorts
+
+Accuracy = 0.9200
+3/4th Accuracy = 0.9760
+Accuracy of Individual Digits = 0.9710
+
+
+
+SVM - Raw - Digits - 5 distorts
+
+Accuracy = 0.9380
+3/4th Accuracy = 0.9800
+Accuracy of Individual Digits = 0.9755
+
+SVM - Raw - Distorted Digits - 25 distorts
+
+Accuracy = 0.9480
+3/4th Accuracy = 0.9760
+Accuracy of Individual Digits = 0.9755
+
+SVM - Raw - Digits + Letters - 25 distorts
+
+Accuracy = 0.8140
+3/4th Accuracy = 0.9480
+Accuracy of Individual Digits = 0.9340
+
+
+
+KNN - MFCC - Digits - 25 distorts
+
+Accuracy = 0.9760
+3/4th Accuracy = 0.9800
+Accuracy of Individual Digits = 0.9850
+
+
+KNN - MFCC - Distorted Digits - 25 distorts
+
+Accuracy = 0.9700
+3/4th Accuracy = 0.9760
+Accuracy of Individual Digits = 0.9815
+
+
+KNN - MFCC - Digits + Letters - 25 distorts
+
+Accuracy = 0.8580
+3/4th Accuracy = 0.9660
+Accuracy of Individual Digits = 0.9530
