@@ -17,8 +17,6 @@ Accuracy = 0.5920
 Accuracy of Individual Digits = 0.8630
 
 
-
-
 SVM - Rasta - Digits - 50 distorts
 
 Accuracy = 0.4560
@@ -51,3 +49,5 @@ SVM - Raw - 5 distorts - Digits + Letters
 Accuracy = 0.1620
 3/4th Accuracy = 0.5060
 Accuracy of Individual Digits = 0.6210
+
+K-Nearest Neighbors (KNN)
