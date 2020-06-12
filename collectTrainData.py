@@ -7,8 +7,8 @@ from scipy.fftpack import dct
 import matplotlib.pyplot as plt
 import random
 
-DISTORT_COUNT = 10
-DISTORT_OFFSET = 200
+DISTORT_COUNT = 25
+DISTORT_OFFSET = 300
 
 #Parameters:
 #dir: directory to gather data

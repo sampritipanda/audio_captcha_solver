@@ -9,8 +9,8 @@ from sklearn.decomposition import PCA
 
 from collectTrainData import collectTrainData
 from getPotentialSpeakLocation import getPotentialSpeakLocation
-from FeatureExtraction import Mfcc,Raw
-from MLAlgo import KNN, SVM
+from FeatureExtraction import Rasta,Mfcc,Raw
+from MLAlgo import KNN, SVM, NeuralNetFeatures, NeuralNetRaw
 
 
 def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, pcaDim=None):
@@ -21,6 +21,8 @@ def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, pc
     #2. feature extraction
     print("Apply feature extraction to the raw data...")
     X_train = featureExtraction(X_train, rate) 
+
+    pca = PCA(n_components=pcaDim)
 
     #******PCA (optional)
     if pcaDim is not None:
@@ -80,10 +82,14 @@ def runPipeline(dir_train, dir_test, left, right, mlModel, featureExtraction, pc
     
 #########CONFIGURATION FOR THE PIPELINE
 if __name__ == '__main__':
-    DIR_TRAIN = os.path.join("data", "securimage_digits", "train")
-    DIR_TEST = os.path.join("data", "securimage_digits", "test")
+    DIR_TRAIN = os.path.join("data", "securimage_all", "train")
+    DIR_TEST = os.path.join("data", "securimage_all", "test")
     LEFT = 2500
     RIGHT = 2500
-    MLMODEL = KNN(n_neighbors=5)
-    FEATURE_EXTRATION = Mfcc()
+    # MLMODEL = NeuralNetFeatures(10)
+    MLMODEL = NeuralNetRaw(36)
+    # MLMODEL = SVM()
+    # FEATURE_EXTRATION = Rasta()
+    FEATURE_EXTRATION = Mfcc(flatten=False)
+    # FEATURE_EXTRATION = Raw()
     runPipeline(DIR_TRAIN, DIR_TEST, LEFT, RIGHT, MLMODEL, FEATURE_EXTRATION)
