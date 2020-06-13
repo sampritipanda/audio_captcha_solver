@@ -65,3 +65,35 @@ KNN + MFCC + 25 distorts - Digits + letter:
 Accuracy = 0.5400
 3/4th Accuracy = 0.8720
 Accuracy of Individual Digits = 0.8445
+
+
+KNN + Raw + 5 distorts - Digits:
+Accuracy = 0.1840
+3/4th Accuracy = 0.5180
+Accuracy of Individual Digits = 0.6360
+
+KNN + Raw + 5 distorts - Digits distored:
+Accuracy = 0.0920
+3/4th Accuracy = 0.3600
+Accuracy of Individual Digits = 0.5370
+
+KNN + Raw + 5 distorts - Digits + letter:
+Accuracy = 0.0940
+3/4th Accuracy = 0.4160
+Accuracy of Individual Digits = 0.5580
+
+
+KNN + Rasta + 25 distorts - Digits:
+Accuracy = 0.3880
+3/4th Accuracy = 0.7780
+Accuracy of Individual Digits = 0.7780
+
+KNN + Rasta + 25 distorts - Digits distored:
+Accuracy = 0.4060
+3/4th Accuracy = 0.8140
+Accuracy of Individual Digits = 0.7915
+
+KNN + Rasta + 25 distorts - Digits + letter:
+Accuracy = 0.4380
+3/4th Accuracy = 0.8080
+Accuracy of Individual Digits = 0.8005
